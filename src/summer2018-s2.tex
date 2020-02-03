@@ -1,0 +1,58 @@
+\section{Problem 3 – Minimum AVL Tree / Fibonacci Tree}
+
+Setting: $T_n$ stands for AVL tree of height $n$.
+Denote $N(n)$ for number of nodes in $T_n$.
+
+\paragraph{Question 1}
+20
+
+\paragraph{Question 2}
+\begin{equation*}
+    N(n) = N(n-1) + N(n-2) + 1 
+\end{equation*}
+
+Bonus: note that $N(n) = Fib_{n+3} - 1$  where $Fib_0 = 0$.
+Proof goes by induction: 
+$N(0) = 1 = 2 - 1 = Fib_3 - 1$, 
+$N(1) = 2 = 3 - 1 = Fib_4 - 1$.
+Inductive step:
+\begin{equation*}
+N(n) = N(n-1) + N(n-2) + 1 = (Fib_{n+2} - 1) + (Fib_{n+1} - 1) + 1 = Fib_{n+3}-1    
+\end{equation*}
+
+
+\paragraph{Question 3}
+Note that $r^n = r^{n-1} + r^{n-2}$.
+To see that start with:
+\begin{equation*}
+ r^2 = (\frac{1+\sqrt{5}}{2})^2 = \frac{1+\sqrt{5}}{2} + 1 = r+1   
+\end{equation*}
+and multiply it by $r^{n-2}$ both sides.
+
+The rest goes by induction. 
+Base case: $N(0) = 1 \geq r^0$, $N(1) = 2 > r^1$.
+Inductive step:
+\begin{equation*}
+    N(n) = N(n-1) + N(n-2) + 1 \geq r^{n-1} + r^{n-2} = r^n
+\end{equation*}
+
+% \paragraph{Failed attempt: Question 4}
+% Full binary tree of height $n$ has $2^{n+1} - 1$ nodes.
+% Of course $T_n$ of height $n$ has fewer nodes than the full binary tree: $N(n) \leq 2^{n+1} -1$.
+% Notice, that the deepest level of $T_n$ consist of only one node:
+% that's because $T_0$ has one node and $T_n$ is made out of $T_{n-1}$ and $T_{n-2}$ (and a root – try to depict that).
+% Thus, we can do even better approximation:
+% $T_n$ has fewer nodes than full binary tree of height n-1 plus one node:
+% \begin{equation*}
+%     N(n) \leq 2^{n+1-1} - 1 + 1 = 2^n 
+% \end{equation*}
+% Still not quite good...
+
+\paragraph{Question 4}
+Again, by induction. 
+Base: tree of height $0$ has $1< r^2$ nodes.
+Induction:
+\begin{equation*}
+    N(n) = 1 + N(n-1) + N(n-2) \leq 1 + r^{n+1} + r^{n} = r^{n+2} + 1
+\end{equation*}
+

@@ -1,0 +1,95 @@
+\section{Problem 1 – Linear Algebra, Least Squares}
+Setting of the problem: we're solving $Ax = b$, where $A\in \mathbb{R}^{m\times n}, b\in\mathbb{R}^m$ and $x\in \mathbb{R}^n$.
+
+\paragraph{Question 1}
+(i) There are 3 linearly independent column vectors among
+$A = \begin{pmatrix}
+1 & 0 & -1\\
+1 & 1 & 0 \\
+0 & 1 & 1
+\end{pmatrix}$
+Just run Gaussian elimination.
+
+(ii) $b = \begin{pmatrix}
+2 \\ 4\\ 2
+\end{pmatrix}
+= 3\cdot a_1 + 1\cdot a_2 + a_3
+$,
+where $a_i$ stand for column vectors of $A$.
+
+(iii) $a_1, a_2, a_3$ are linearly independent, but $b$ is linearly dependent with any of them.
+Thus, there are 3 linearly independent vectors among $a_1, a_2, a_3, a_4$.
+
+\paragraph{Question 2}
+Show that solution for $Ax= b$ exists when rank$A$ = rank$\bar{A}$ for arbitrary $m,n, A, b$. 
+$\bar{A} = (A | b)$, i.e. $A$ with additional column of $b$.
+
+Rank of $A$, in other words, is a number of independent vectors, either columns or row ones.
+rank$A$ = rank$\bar{A}$ means that adding one more column to $A$ did not increased nor decreased number of independent vectors.
+That is, the added column, $b$, is linearly dependent with columns of $A$,
+that is, $b$ can be represented as a linear combination of columns of $A$ with coefficients of $x$.
+Thus, a solution for $Ax = b$ exist.
+
+
+\paragraph{Question 3}
+$m>n$, rank$A$ = $n$ and rank$\bar{A} >$ rank$A$. 
+Obtain $x$ minimizing $||b - Ax||^2$.
+ 
+Error vector $b- Ax$ is perpendicular to column space of $A$.
+Therefore, $b-Ax$ is in the nullspace of $A^T$, that is:
+\begin{align*}
+    A^T(b-Ax) = 0 \\
+    A^Tb = A^T Ax
+\end{align*}
+Because rank$A = n$, that is $A$ has $n$ independent columns, then $A^T A \in \mathbb{R}^{m \times m}$ is invertible.
+We obtain:
+\begin{equation*}
+ x = (A^T A) ^{-1} A^T b   
+\end{equation*}
+
+
+\paragraph{Question 4}
+Minimize $||x||^2$ subject to $Ax -b$ using Lagrange Multiplier.
+Let $v \in \mathbb{R}^m$.
+Write:
+\begin{equation*}
+    \mathcal{L}(x, v) = x^T x - v^T (Ax - b) = x^x - v^TAx + v^Tb
+\end{equation*}
+Take gradient wrt $x$:
+\begin{equation*}
+    \nabla_x \mathcal{L} = 2x - A^Tv
+\end{equation*}
+Set the gradient to zero: $x = \frac{1}{2}A^T v$ and plug $x$ into $Ax = b$: $AA^T v = 2b$.
+Again, $AA^T$ is invertible so we can write $v = 2 (AA^T)^{-1} b $.
+Finally, plug it back to $x$ to get the final answer:
+\begin{equation*}
+    x = A^T (AA^T)^{-1}b
+\end{equation*}
+
+\paragraph{Question 5}
+$APA = A, PAP = P, (AP)^T = AP, (PA)^T = PA$.
+This is definition of \textit{pseudoinverse} of a matrix.
+See \href{https://en.wikipedia.org/wiki/Proofs_involving_the_Moore\%E2\%80\%93Penrose_inverse\#Proof_of_uniqueness}{wiki (click)} for detailed proofs.
+
+Suppose that there are two matrices $P_1$ and $P_2$ satisfying the above.
+Write:
+\begin{equation*}
+    AP_1 = A P_2  A P_1 = (AP_2)^T (AP_1)^T = P_2^T  A^T P_1^T A^T =
+    P_2^T(AP_1 A)^T = P_2^T A^T = AP_2
+ \end{equation*}
+Similarly, $P_1 A = P_2 A$.
+Now we can conclude that:
+\begin{equation*}
+    P_1 = P_1 A P _1 = P_1 A P_2 = P_2 A P_2 = P_2
+\end{equation*}
+
+\paragraph{Question 6}
+Show that both $x$ obtained in (3) and (4) are in form $x = Pb$.
+
+$x^{(3)} = (A^T A) ^{-1} A^T b$ and $x^{(4)} = A^T (AA^T)^{-1}b$. 
+Write $P^{3} = (A^T A) ^{-1} A^T$ and $P^{(4} = A^T (AA^T)^{-1}$.
+Plug them both to equations in (Q5) to verify that those equations hold.
+Furthermore, we know that such $P$ is unique, thus  $P^{3} = P^{(4)}$.
+
+
+

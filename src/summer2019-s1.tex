@@ -1,0 +1,91 @@
+\section{Problem 2 – Virtual Memory, Paging}
+
+\paragraph{Question 1}
+\begin{itemize}
+    \item \emph{Page} – instead of loading the whole program into the memory, we divide it into fixed-sized chunks called \emph{pages}
+    and we load some of them to fixed-size chunks of physical memory called \emph{frames}
+    We load to the memory only those pages that we currently need. 
+    Bonus: motivation: processes spend $90\%$ of their execution time accessing only $10\%$ of their space in the memory.
+    \item \emph{Page Table} – stores mapping between virtual and physical addresses. It's a region in a memory where we can look-up actual page physical address.
+    \item \emph{Page Replacement} - when we cannot allocate a page in a memory, we need to evict some page residing in the memory.
+    \item \emph{Page fault} – access to the page which is not in the memory
+    \item \emph{TLB} - fast, hardware supported cache memory speeding up address translation (accessing an address via page table requires two actual physical memory accesses).
+\end{itemize}
+
+
+\paragraph{Question 2}
+
+A page has $4KB = 4 \cdot 1024B$.
+If we were to address every word (i.e. every $32b = 4B$) within a page, 
+then there are $\frac{4\cdot 1024}{4}$ possible addresses.
+To address them all we need $log_2 1024 = 10$ bits.
+
+Thus, lower $10$ bits of the virtual address make an offset within a page, and the rest of bits make index in the page table:
+\begin{equation*}
+    2A0F_{16} = 10.1010.0000.1111_2    
+\end{equation*}
+Offset within a page: $10.0000.1111_2$,
+Page number, PageTable[$1010_2$] = $100_2$.
+Sanity check: this page is valid, yay.
+The physical address corresponding to virtual $2A0F$ is:
+\begin{equation*}
+    1.00\: 10.0000.1111_2 = 120F_{16}
+\end{equation*}
+
+\paragraph{Question 3}
+We can fit $1024$ integers into one page.
+It is easier to look at $A$ as a $1024\times 1024$ 2-dimensional array, which elements are stored continuously in the memory, row-by-row.
+We can fit one whole row into a page.
+Since memory size is $32KB$ and page has $4KB$ then $8$ pages fit into the memory.
+However, one page is reserved, so we can store total of $7$ rows of $A$ in the memory.
+
+\emph{Program 2} accesses $A$ row by row.
+Thus, first $7$ rows will be accessed with no page fault (\emph{PF}). $8$th and every following row row will cause PF.
+Hence, there will be:
+\begin{equation*}
+    1024-8+1 = 1017
+\end{equation*}
+page faults in total.
+
+\emph{Program 1} accesses $A$ column by column.
+Every element of a column will land in a different page, thus
+only first $7$ accesses to $A$ won't cause PF.
+We got:
+\begin{equation*}
+    1024\cdot 1024 - 7 = 2^{20} - 7
+\end{equation*}
+page faults in total.
+
+
+This one was also solved in Silberschatz's \textit{Operating Systems Concepts, 9th ed.,} Chapter 9.9.5.
+
+
+\section{Problem 3 - Automata Theory}
+
+\paragraph{Question 1}
+Given DFA $\mathcal{A} = (Q, \Sigma, \delta, q_0, F)$, give an automaton accepting complement of $\mathcal{L(A)}$, i.e. $\Sigma^*\setminus\mathcal{L(A)}$.
+
+Let $\mathcal{A}' = (Q, \Sigma, \delta, q_0, Q\setminus F)$
+Now, $w \in \mathcal{L(A')}$ iff $\delta(w, q_0) \in (Q\setminus F$) which is occurs only when $w\notin \mathcal{L(A)}$
+
+\paragraph{Question 2}
+Given CFG $\mathcal{G} = (V, \Sigma, P, S)$, decide wheaterh $\mathcal{L(G)} = \varnothing$.
+
+We call symbol $A\in V$ \emph{generating} if $A\Rightarrow^* w$ for some string $w$ of terminals.
+If there's no such string, then $A$ is \emph{nongenerating}.
+Language of grammar $\mathcal{G}$ is empty iff start symbol $S$ is nongenerating.
+We can find set of generating symbols using the algorithm below.
+Symbols that are not marked generating, are nongenerating.
+The algorithm:
+\begin{itemize}
+    \item \emph{Base}. Every terminal symbol form $T$ is generating.
+    \item \emph{Induction}. If for some production $A\rightarrow \alpha$, $\alpha$ is known to be generating, then is $A$.
+\end{itemize}
+
+\paragraph{Question 3}
+Looks pretty obvious from the construction.
+A nice induction'd make it.
+
+\paragraph{Question 4}
+If $(\mathcal{L(G)}\cap \overline{\mathcal{L(A)}}) = \varnothing$, then $\mathcal{L(G)} \subseteq \mathcal{L(A)}$
+We can compute complement based on (Q1), intersection based on (Q3) and check for emptiness based on (Q2).

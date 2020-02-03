@@ -1,0 +1,311 @@
+\section{Problem 1 – Logic Circuit Design \textit{(send help)}}
+
+\paragraph{Question 1}
+\emph{Joint effort.}
+Thanks to Igor who first brute-forced the solution for $n=3$.
+Takato did the same but using \emph{k-maps} for each $M_i$.
+
+Taku first draw a table for $n=2$:   
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{cc|cccc}
+$K_1$ & $K_0$ & $M_3$ & $M_2$ & $M_1$ & $M_0$ \\
+\hline
+0  & 0  & 0  & 0 & 0 & 1 \\
+0  & 1  & 0  & 0 & 1 & 1 \\
+1  & 0  & 0  & 1 & 1 & 1 \\
+1  & 1  & 1  & 1 & 1 & 1
+\end{tabular}
+\end{table}
+And then for $n=3$:
+\begin{table}[!h]
+\centering
+\begin{tabular}{lll|llll|llll}
+$K_2$ & $K_1$ & $K_0$ & $M_7$ & $M_6$ & $M_5$ & $M_4$ & $M_3$ & $M_2$ & $M_1$ & $M_0$ \\
+\hline
+0  & 0  & 0  &    &    &    &    &    &    &    & 1  \\
+0  & 0  & 1  &    &    &    &    &    &    & 1  & 1  \\
+0  & 1  & 0  &    &    &    &    &    & 1  & 1  & 1  \\
+0  & 1  & 1  &    &    &    &    & 1  & 1  & 1  & 1  \\
+\hline
+1  & 0  & 0  &    &    &    & 1  & 1  & 1  & 1  & 1  \\
+1  & 0  & 1  &    &    & 1  & 1  & 1  & 1  & 1  & 1  \\
+1  & 1  & 0  &    & 1  & 1  & 1  & 1  & 1  & 1  & 1  \\
+1  & 1  & 1  & 1  & 1  & 1  & 1  & 1  & 1  & 1  & 1 
+\end{tabular}
+\end{table}
+
+Notice the repetitive pattern above.
+Let's build solution for $n=3$ using $n=2$.
+A circuit for $n=2$ is easy to build: let it have inputs $K_1^{(2)}, K_0^{(2)}$ and outputs $M_i^{(2)}$ for $i=0,1,2,3$.
+Let the solution for $n=3$ have inputs $K_j^{(3)}$ for $j=0,1,2$ and outputs $M_l^{(3)}$ for $l=0,1,\cdots7$.
+Now set:
+\begin{align*}
+    K_0^{(2)} &:= K_0^{(3)} \\
+    K_1^{(2)} &:= K_1^{(3)} \\
+    M_i^{(3)} &:= M_i^{(2)} \lor K_2^{(3)}  && \text{for $i=0,1,2,3$} \\
+    M_i^{(3)} &:= M_i^{(2)} \land K_2^{(3)}  && \text{for $i=4,5,6,7$}
+\end{align*}
+
+This way we can generalize: to build solution for $n+1$, we can reuse solution for $n$ with addition of $2^n$ more gates.
+More specifically, solution for $n$ has $2^n$ outputs.
+We \emph{or} first 'half' of output wires with $K_{n+1}$, and \emph{and} the rest.
+
+With this recursive definition, we can easily compute $S(n)$ \textit{size} of the circuit with $n$ inputs:
+\begin{align*}
+    S(n) = S(n-1) + 2^{n} = \sum_{i=0}^{i=n} 2^i = 2^{n+1} - 1 = O(N)
+\end{align*}
+
+Let $D(n)$ denote \textit{depth} of the circuit with $n$ inputs. Recall that $N=2^n$ stands for number of outputs.
+\begin{align*}
+    D(n) = D(n-1) + 1 = O(n) = O(\log N)
+\end{align*}
+
+Don't forget to add a switch $Z$ at the end of the final answer:
+simply \emph{and} every $M_i$ with negated $Z$.
+It adds $1$ to depth and $2^n$ to size.
+Although, it doesn't change asymptotic size and depth, respectively.
+
+
+\paragraph{Question 2}
+(send help) Limitation on depth makes it difficult.
+
+\section{Problem 2 – Bucket Sort}
+
+Setting of the problem: we got $N$ element and $K$ buckets.
+
+\paragraph{Question 1}
+\begin{verbatim}
+B[m].get(j)
+\end{verbatim}
+
+\paragraph{Question 2}
+The input sequence might be in an \textbf{increasing} order and all elements might fall into one bucket.
+Thus, line $6$ will be executed:
+\begin{equation*}
+    C = 0 + 1 + \cdots + (n-1) = \frac{n(n-1)}{2}
+\end{equation*}
+times.
+Note that it has to be an increasing order, because items are being inserted at the beginning of a bucket.
+If we wanna do evil, we must make every item traverse the whole bucket, until the end.
+It is possible when every inserted item is bigger than any element in the bucket, that is, input sequence is of increasing order.
+
+
+\paragraph{Question 3}
+Let $n_i$ denote size of $i$-th bucket.
+Line $6$ is de facto an \emph{insertion sort}, which means that $i$-th~bucket will be sorted in $O(n^2)$.
+Total running time will be  to:
+\begin{equation*}
+    C = \sum_{i=1}^{K} O(n_i^2)
+\end{equation*}
+Taking expectation:
+\begin{equation*}
+    \mathbb{E}(C) = \mathbb{E}[\sum_{i=1}^{K} O(n_i^2)]
+                  = \sum_{i=1}^{K} \mathbb{E}[O(n_i^2)]
+                  = \sum_{i=1}^{K} O(\mathbb{E}[n_i^2])
+\end{equation*}
+What is $[\mathbb{E}n_i^2]$? 
+Note that, by definition $Var(X) = \mathbb{E}[X^2] - (\mathbb{E}X)^2$ for any random variable $X$.
+Let $X_{i,j}$ be an indicator random variable:
+\begin{equation*}
+    X_{i,j} = \begin{cases}
+    1 & \text{element $j$ went to bucket $i$} \\
+    0 &  \text{otherwise}
+    \end{cases}
+\end{equation*}
+\begin{equation*}
+    n_i = \sum_{j=1}^{N} X_{i, j}
+\end{equation*}
+Since we have $K$ buckets and every of them is equally likely, probability of "going to bucket $i$" is $\frac{1}{K}$.
+Thus, expectation of $n_i$ is:
+\begin{equation*}
+     \mathbb{E}(n_i) = \sum_{j=1}^{N} \mathbb{E}(X_{i, j}) = \frac{N}{K}
+\end{equation*}
+
+We can also notice, that, $n_i$ is just a binomial random variable with expectation $np$ and variance $np(1-p)$.
+Here a trial is mapping an item into bucket, and the success is placing it into $i$-th bucket.
+There are $n=N$ trials and probability of success if $\frac{1}{K}$.
+\begin{align*}
+    \mathbb{E}[n_i^2] = Var[n_i] + (\mathbb{E}[n_i])^2 &= N\frac{1}{K}(1-\frac{1}{K}) + (\frac{N}{K})^2 \\
+    &= \frac{N^2 + NK - N}{K^2}
+\end{align*}
+Finally:
+\begin{align*}
+    \mathbb{E}[C]   = O(\sum_{i=1}^{K}\mathbb{E}[n_i^2]) 
+                    = O(\sum_{i=1}^{K} \frac{N^2 + NK - N}{K^2})
+                    = O(\frac{N^2}{K} + N)
+\end{align*}
+
+\paragraph{Question 3}
+The following contribute to total expected running time:
+\begin{itemize}
+    \item finding a bucket for each element $O(N)$
+    \item sorting each bucket, $O(\frac{N^2}{K} + N)$
+    \item for each bucket, getting its content: $O(K\frac{N}{K}) = O(N)$
+\end{itemize}
+Total running time:
+\begin{equation*}
+    O(\frac{N^2}{K} + 3N)
+\end{equation*}
+When $K$ is $O(N)$, then we get $O(N)$ expected running time.
+When $K$ is $O(1)$, then the running time is $O(N^2)$.
+
+\paragraph{Question 4}
+\begin{itemize}
+    \item BS is stable, QS isn't
+    \item BS isn't in-place, QS is
+    \item BS runs $O(N)$ expected, QS is $O(NlogN)$
+    \item BS has upper limit on keys, QS hasn't
+\end{itemize}
+
+
+
+
+\section{Problem 3 – Automata Theory}
+\paragraph{Question 1}
+\begin{verbatim}
+--> o --a--> o --a--> o --b--> (o)
+   / \      / \      / \       / \
+   \ /      \ /      \ /       \ /
+    E        E        E         E
+\end{verbatim}
+
+
+\paragraph{Question 2}
+Write
+\begin{equation*}
+    L_2 = \{w \in \Sigma^* | v \preceq w \text{ for some } v \in L \}
+\end{equation*}
+where $v \preceq w$ indicates that $v$ is subsequence of $w$.
+In other words, to in order to get a word from $L_2$, we first fix a word $v \in L$ and then intertwine its letters with some "garbage" from $\Sigma^*$.
+
+% The first idea is to reuse Q1: for each $v \in L$, $v = v_1 v_2\cdots v_{|v|}$ we will create a "small" automaton with $v_{|v|}$ states.
+% We will label transitions between next states with $v_1, v_2, \cdots, v_{|n|}$.
+% Additionally, each state has a loop to itself labeled with $\Sigma^*$. 
+% The last state (with incoming edge $v_{|v|}$) is an accepting state.
+% The "big" automaton $A_2$ which accepts $L_2$ consists of $|L|$ "small" automatons.
+% First states in every "small" automaton (i.e with edge $v_1$) make set of starting state of $A_2$.
+
+Let's fix $v\in L$.
+Let $p_1, p_2, \cdots p_{|v|}$ be sequence of states that $\mathcal{A}$ visits when reading $v$.
+Label transitions between $p_i$'s with next letters of $v$.
+Moreover, for each $p_i$, add a loop to itself labeled with $\Sigma$.
+Make $p_1$ the start state.
+
+\paragraph{Question 3}
+First,
+\begin{equation*}
+    L' = \{ w \in \Sigma^* | v\in L \text{ for every } v\in \Sigma^* \text{ such that  } v\preceq w\}
+\end{equation*}
+is kinda quirky. 
+We already supposed that $L \subseteq \Sigma^*$, so why do we need $v\in \Sigma^*$ above?
+
+Let's start with constructing a NFA $\mathcal{N}$ which accepts L'.
+Let $\mathcal{N}$ be a copy of $\mathcal{A}$, where we additionally put $\Sigma$-labeled loops on every state.
+Intuitively, while traversing $\mathcal{A}$, in every state, we can have a "detour", i.e. accept some garbage.
+
+Having constructed NFA $\mathcal{N}$, move to constructing equivalent DFA $\mathcal{D}$.
+It is feasible, and subset construction tells us how to it.
+Formally, define automaton $\mathcal{A}$ accepting $L$ as $\mathcal{A} = (Q, \Sigma, \delta, q_o, F)$.
+NFA $\mathcal{N}$ such that $\mathcal{L}(\mathcal{N}) = L'$ is defined as:
+\begin{align*}
+    \mathcal{N} &= (Q, \Sigma, \delta_N, q_0, F)
+\end{align*}
+where
+\begin{equation*}
+    \delta_N(q, a) = \{q\} \cup \{\delta(q,a)\}
+\end{equation*}
+is a "loop" on every state.
+Now, equivalent DFA $\mathcal{D}$ is obtained by subset construction:
+\begin{align*}
+    \mathcal{D} &= (Q_D, \Sigma, \delta_D, {q_0}, F_D) \\
+    Q_D &= \mathcal{P}(Q) \\
+    F_D &= \{ X\in Q_D | X\cap F \neq \emptyset\} \\
+    \delta_D(X,a) &= \bigcup_{q \in X} \delta_N(q,a)
+\end{align*}
+
+
+\paragraph{Question 4}
+Since every DFA has equivalent NFA and vice versa, I'll prove (Q3) for NFA $\mathcal{N}$.
+Two steps:
+\begin{itemize}
+    \item $w \in L' \Rightarrow \mathcal{N} \text{ accepts } w$.
+    Since $w\in L'$, then there must exits $v\in L$ such that $v\preceq w$.
+    $v$ is accepted both in $\mathcal{A}$ and $\mathcal{N}$, since $\mathcal{N}$ has exactly the same states as $\mathcal{A}$.
+    Then, $w$ must be accepted by $\mathcal{N}$ by following the loops on letters of $w$ which do not contribute to $v$.
+    \item $\mathcal{N} \text{ accepts } w \Rightarrow w \in L'$.
+    To get $v$ such that $v\preceq w$, simulate $\mathcal{N}$ on $w$, skip the loops. 
+    Obviously $v\in L$, because states of $\mathcal{N}$ and $\mathcal{A}$ are the same and $v$ and $w$ will end up in the same final state of $\mathcal{N}$.
+\end{itemize}
+
+
+
+\section{Problem 4 – Linear Algebra}
+
+\paragraph{Question 1}
+Condition number $\kappa(A)$ of $A$ is:
+\begin{equation*}
+    \kappa(A) = ||A|| \: ||A^{-1}||
+\end{equation*}
+where $||\cdot ||$ denotes a norm of a matrix:
+\begin{equation*}
+    ||A|| = \max_{x\in \mathbb{R^N}} \frac{||Ax||}{||x||} = \max_{x: ||x||=1} ||Ax||
+\end{equation*}
+
+
+
+\paragraph{Question 2}
+Not sure if OK...  \\ We know $Ax = b$ and let $r = b- A\hat{x}$:
+\begin{align*}
+    (A+E)\hat{x} &= b \\
+    A\hat{x} + E\hat{x} &= b \\
+    E\hat{x} &= b - A\hat{x} \\
+    E\hat{x} &= r
+\end{align*}
+But how do we know if $E$ is rank $1$?
+
+
+\paragraph{Question 3}
+\begin{align*}
+    (A+ \delta A)(x+ \delta x) = b \\
+    Ax + A(\delta x) + \delta A(x+ \delta x) = b
+\end{align*}
+Substituting $Ax = b$:
+\begin{align*}
+    A(\delta x) + \delta A(x+ \delta x) &= 0 \\
+    - A(\delta x) &= \delta A(x+ \delta x) \\
+    -\delta x &= A^{-1} (\delta A)(x+ \delta x)
+\end{align*}
+because matrix $A$ is not singular, so inverse $A^{-1}$ exist.
+Now, take the norm both sides.
+We are assuming that $A + \sigma A$ is not singular, so it has inverse and thus a norm:
+\begin{align*}
+    ||\delta x || &= || A^{-1} \: [\delta A(x+ \delta x) ]|| \\
+      &\leq || A^{-1} ||  \: || \delta A(x+ \delta x) || \\
+      &\leq || A^{-1} ||  \: || \delta A || \: || x + \delta x ||
+\end{align*}
+\begin{align*}
+    \frac{||\delta x ||}{ || x + \delta x || } &\leq || A^{-1} ||  \: || \delta A || \\
+    &= || A^{-1} || \:  \frac{|| A^{1} || }{|| A^{1} ||} || \delta A || \\
+    &= \kappa(A) \frac{||\delta A||}{||A||}
+\end{align*}
+
+\paragraph{Question 4}
+When an $n$ dimensional real matrix C is singular, there is a non-zero, real vector $y$ such that $Cy = 0$. 
+\textit{In particular}, we can choose a unit vector $y' = \frac{y}{||y||}$. 
+
+Let $x \in nullspace(B)$ be a unit vector i.e. $Bx = 0$ and $||x|| = 1$.
+\begin{align*}
+    ||A-B|| &= ||A-B|| \: ||x|| \\
+            &\geq || (A-B)x || \\
+            &= ||Ax - Bx|| \\
+            &= ||Ax||
+\end{align*}
+On the other hand:
+\begin{align*}
+    1 = ||x|| = || A^{-1} \:(Ax) || &\leq || A^{-1} || \: ||Ax|| \\
+    ||Ax|| &\geq \frac{1}{||A^{-1}||}
+\end{align*}
+More on condition numbers:\newline
+\url{https://blogs.mathworks.com/cleve/2017/07/17/what-is-the-condition-number-of-a-matrix/}.

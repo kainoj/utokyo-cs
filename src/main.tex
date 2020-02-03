@@ -1,0 +1,82 @@
+\documentclass{report}
+
+\usepackage[a4paper, total={170mm,257mm}]{geometry}
+% \usepackage{CJKutf8}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+
+\title{%
+Selected solutions for past entrance exams \\
+\large{dept. of Computer Science, IST, \\
+The University of Tokyo}}
+
+
+\author{Przemek}
+\date{January 2020}
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace*{\fill}
+\begin{center}
+Past exams can be found here: \url{http://bit.ly/todai-cs}
+\end{center}
+
+\begin{center}
+I do not guarantee correctness of the solutions.
+
+\textbf{Use on your own risk.}
+\end{center}
+\vspace*{\fill}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+\newpage
+
+\chapter{Winter 2019}
+\input{winter2019.tex}
+
+\chapter{Winter 2018}
+\input{winter2018.tex}
+
+\chapter{Winter 2017}
+\input{winter2017.tex}
+
+\chapter{Winter 2016}
+\input{winter2016.tex}
+
+\chapter{Winter 2015}
+\input{winter2015.tex}
+
+\chapter{Summer 2019 – S1}
+\input{summer2019-s1.tex}
+
+\chapter{Summer 2018 – S1}
+\input{summer2018-s1.tex}
+
+\chapter{Summer 2018 – S2}
+\input{summer2018-s2.tex}
+
+\chapter{Summer 2018 – Math}
+\input{summer2018-math.tex}
+
+\chapter{Summer 2017 – S1}
+\input{summer2017-s1.tex}
+
+\end{document}
